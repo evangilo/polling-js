@@ -37,6 +37,10 @@ export class Polling {
   }
 
   run() {
+    if (this._state != State.PENDING) {
+      console.warn('Skipping execution because the Polling state is different from pending');
+      return this.cancel;
+    }
     this._state = State.RUNNING;
     this._run();
     return this.cancel;
