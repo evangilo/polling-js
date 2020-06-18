@@ -5,6 +5,12 @@
     "module": "es6",
     "target": "es5",
     "allowJs": true,
-    "lib": ["dom", "es2015", "es2018.promise"]
-  }
+    "lib": ["dom", "es2015", "es2018.promise"],
+    "declaration": true
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "./src/*.test.ts"
+  ]
 }

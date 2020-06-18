@@ -1,21 +1,27 @@
 {
   "name": "polling-js",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "",
-  "main": "polling.js",
+  "main": "dist/polling.min.js",
+  "types": "dist/src/polling.d.ts",
   "scripts": {
     "build": "webpack -p",
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "npm run build"
   },
-  "author": "Evangilo Morais <evangilo@gmail.com>",
+  "author": {
+      "name": "Evangilo Morais",
+      "email": "evangilo@gmail.com"
+  },
+  "homepage" : "https://github.com/evangilo/polling-js",
+  "repository" : {"type": "git", "url": "git://github.com/evangilo/polling-js.git"},
+  "keywords" : ["poll", "browser"],
   "license": "MIT",
   "devDependencies": {
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.5",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
-  },
-  "dependencies": {
+    "webpack-cli": "^3.3.11",
     "@types/jest": "^26.0.0",
     "jest": "^26.0.1",
     "ts-jest": "^26.1.0"

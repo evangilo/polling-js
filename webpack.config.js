@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "polling.min.js",
-    libraryTarget: "var",
+    libraryTarget: "commonjs2",
     library: "polling",
   },
   module: {
