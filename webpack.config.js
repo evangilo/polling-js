@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./polling.ts",
+  entry: "./src/polling.ts",
   mode: "production",
   devtool: "source-map",
   output: {
