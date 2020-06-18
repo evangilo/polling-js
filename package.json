@@ -7,7 +7,7 @@
     "build": "webpack -p",
     "test": "jest"
   },
-  "author": "Evangilo Morais",
+  "author": "Evangilo Morais <evangilo@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "ts-loader": "^7.0.5",
