@@ -58,3 +58,11 @@ export class Polling {
     }
   };
 }
+
+export function setPolling(
+  executor: Executor,
+  interval: number,
+  abortController?: IAbortController,
+) {
+  return new Polling(executor, interval, abortController).run();
+}
