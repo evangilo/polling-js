@@ -7,8 +7,9 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "polling.min.js",
-    libraryTarget: "commonjs2",
+    libraryTarget: "umd",
     library: "polling",
+    globalObject: "this",
   },
   module: {
     rules: [
