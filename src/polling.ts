@@ -1,6 +1,6 @@
 export declare type Executor = (signal?: any) => Promise<any>;
 
-export declare type AbortCallback = () => void;
+export declare type AbortFunction = () => void;
 
 export declare type CancelFunction = () => void;
 
@@ -12,7 +12,7 @@ export enum State {
 
 export interface IAbortController {
   signal: any;
-  abort: AbortCallback;
+  abort: AbortFunction;
 }
 
 export class Polling {
