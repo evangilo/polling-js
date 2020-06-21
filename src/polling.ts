@@ -2,6 +2,8 @@ export declare type Executor = (signal?: any) => Promise<any>;
 
 export declare type AbortCallback = () => void;
 
+export declare type CancelFunction = () => void;
+
 export enum State {
   PENDING = "pending",
   RUNNING = "running",
@@ -36,9 +38,11 @@ export class Polling {
     return this._state;
   }
 
-  run() {
+  run(): CancelFunction {
     if (this._state != State.PENDING) {
-      console.warn('Skipping execution because the Polling state is different from pending');
+      console.warn(
+        "Skipping execution because the Polling state is different from pending",
+      );
       return this.cancel;
     }
     this._state = State.RUNNING;
@@ -46,7 +50,7 @@ export class Polling {
     return this.cancel;
   }
 
-  cancel = () => {
+  cancel: CancelFunction = () => {
     this._state = State.CANCELED;
     this._abortController?.abort();
     clearTimeout(this._scheduleId);
@@ -67,6 +71,6 @@ export function setPolling(
   executor: Executor,
   interval: number,
   abortController?: IAbortController,
-) {
+): CancelFunction {
   return new Polling(executor, interval, abortController).run();
 }
