@@ -1,4 +1,4 @@
-import { State, Pending } from './states'
+import { State, Pending } from "./states";
 
 export declare type Executor = (signal?: any) => Promise<any>;
 
@@ -30,14 +30,14 @@ export class Polling {
     this._scheduleId = null;
   }
 
-  get state(): State {
-    return this._state;
+  get state(): String {
+    return this._state.constructor.name.toLowerCase();
   }
 
   run = (): CancelFunction => {
     this._state = this._state.run(this._run) || this._state;
     return this.cancel;
-  }
+  };
 
   cancel: CancelFunction = () => {
     this._state = this._state.cancel(this._cancel) || this._state;
@@ -49,7 +49,9 @@ export class Polling {
   };
 
   private _run = () => {
-    this._executor(this._abortController?.signal).finally(() => this._state.schedule(this._schedule));
+    this._executor(this._abortController?.signal).finally(() =>
+      this._state.schedule(this._schedule)
+    );
   };
 
   private _schedule = () => {

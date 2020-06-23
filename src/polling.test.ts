@@ -1,5 +1,4 @@
 import { Polling, Executor, IAbortController } from "./polling";
-import { Pending, Running, Canceled } from "./states";
 
 it("test polling state", () => {
   const task = () => {
@@ -7,13 +6,13 @@ it("test polling state", () => {
   };
   const polling = new Polling(task, 1000);
 
-  expect(polling.state).toBeInstanceOf(Pending);
+  expect(polling.state).toBe("pending");
 
   polling.run();
-  expect(polling.state).toBeInstanceOf(Running);
+  expect(polling.state).toBe("running");
 
   polling.cancel();
-  expect(polling.state).toBeInstanceOf(Canceled);
+  expect(polling.state).toBe("canceled");
 });
 
 it("test polling resolve promise", async () => {
@@ -60,7 +59,7 @@ it("test polling abort controller", async () => {
 
 it("test polling cancel after start", () => {
   const successHandle = jest.fn();
-  const task = () => Promise.resolve().then(successHandle());;
+  const task = () => Promise.resolve().then(successHandle());
   const polling = new Polling(task, 1000);
 
   polling.run();
@@ -84,5 +83,5 @@ const timeout = (fn: Function, interval: number) => {
       fn();
       resolve();
     }, interval);
-  })
+  });
 };

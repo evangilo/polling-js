@@ -2,29 +2,29 @@ import { Polling } from "./polling";
 
 export abstract class State {
   schedule(callback: Function): void {}
-  
+
   abstract cancel(polling: Function): State;
   abstract run(callback: Function): State;
 }
 
-export class Pending extends State{
+export class Pending extends State {
   run(callback: Function): State {
     callback();
     return new Running();
   }
 
   cancel(callback: Function): State {
-    console.warn('You cannot cancel a pending polling.');
-    return null;
+    console.warn("You cannot cancel a pending polling.");
+    return this;
   }
 }
 
-export class Running extends State{
+export class Running extends State {
   run(callback: Function): State {
-    console.warn('You cannot run a running polling.');
-    return null;
+    console.warn("You cannot run a running polling.");
+    return this;
   }
-    
+
   cancel(callback: Function): State {
     callback();
     return new Canceled();
@@ -35,14 +35,14 @@ export class Running extends State{
   }
 }
 
-export class Canceled extends State{
+export class Canceled extends State {
   run(callback: Function): State {
-    console.warn('You cannot run a canceled polling.');
-    return null;
+    console.warn("You cannot run a canceled polling.");
+    return this;
   }
 
   cancel(callback: Function): State {
-    console.warn('You cannot cancel a canceled polling.');
-    return null;
+    console.warn("You cannot cancel a canceled polling.");
+    return this;
   }
 }
