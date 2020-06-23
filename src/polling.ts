@@ -1,14 +1,10 @@
+import { State, Pending } from "./states";
+
 export declare type Executor = (signal?: any) => Promise<any>;
 
 export declare type AbortFunction = () => void;
 
 export declare type CancelFunction = () => void;
-
-export enum State {
-  PENDING = "pending",
-  RUNNING = "running",
-  CANCELED = "canceled",
-}
 
 export interface IAbortController {
   signal: any;
@@ -30,40 +26,36 @@ export class Polling {
     this._executor = executor;
     this._interval = interval;
     this._abortController = abortController;
-    this._state = State.PENDING;
+    this._state = new Pending();
     this._scheduleId = null;
   }
 
-  get state(): State {
-    return this._state;
+  get state(): String {
+    return this._state.constructor.name.toLowerCase();
   }
 
-  run(): CancelFunction {
-    if (this._state != State.PENDING) {
-      console.warn(
-        "Skipping execution because the Polling state is different from pending",
-      );
-      return this.cancel;
-    }
-    this._state = State.RUNNING;
-    this._run();
+  run = (): CancelFunction => {
+    this._state = this._state.run(this._run) || this._state;
     return this.cancel;
-  }
+  };
 
   cancel: CancelFunction = () => {
-    this._state = State.CANCELED;
+    this._state = this._state.cancel(this._cancel) || this._state;
+  };
+
+  private _cancel = () => {
     this._abortController?.abort();
     clearTimeout(this._scheduleId);
   };
 
   private _run = () => {
-    this._executor(this._abortController?.signal).finally(this._schedule);
+    this._executor(this._abortController?.signal).finally(() =>
+      this._state.schedule(this._schedule)
+    );
   };
 
   private _schedule = () => {
-    if (this._state === State.RUNNING) {
-      this._scheduleId = setTimeout(this._run, this._interval);
-    }
+    this._scheduleId = setTimeout(this._run, this._interval);
   };
 }
 

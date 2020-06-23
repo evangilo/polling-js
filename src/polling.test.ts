@@ -1,4 +1,4 @@
-import { Polling, State, Executor, IAbortController } from "./polling";
+import { Polling, Executor, IAbortController } from "./polling";
 
 it("test polling state", () => {
   const task = () => {
@@ -6,13 +6,13 @@ it("test polling state", () => {
   };
   const polling = new Polling(task, 1000);
 
-  expect(polling.state).toBe(State.PENDING);
+  expect(polling.state).toBe("pending");
 
   polling.run();
-  expect(polling.state).toBe(State.RUNNING);
+  expect(polling.state).toBe("running");
 
   polling.cancel();
-  expect(polling.state).toBe(State.CANCELED);
+  expect(polling.state).toBe("canceled");
 });
 
 it("test polling resolve promise", async () => {
@@ -21,8 +21,7 @@ it("test polling resolve promise", async () => {
   const polling = new Polling(task, 1000);
 
   polling.run();
-  setTimeout(polling.cancel, 2000);
-  await waitPolling(polling);
+  await timeout(polling.cancel, 2000);
 
   expect(successHandle).toHaveReturnedTimes(2);
 });
@@ -33,8 +32,7 @@ it("test polling reject promise", async () => {
   const polling = new Polling(task, 1000);
 
   polling.run();
-  setTimeout(polling.cancel, 2000);
-  await waitPolling(polling);
+  await timeout(polling.cancel, 2000);
 
   expect(errorHandle).toHaveReturnedTimes(2);
 });
@@ -53,20 +51,37 @@ it("test polling abort controller", async () => {
   const polling = new Polling(task, 1000, abortController);
 
   polling.run();
-  setTimeout(polling.cancel, 2000);
-  await waitPolling(polling);
+  await timeout(polling.cancel, 2000);
 
   expect(executorMock).toHaveBeenCalledWith("mytoken");
   expect(abortMock.mock.calls.length).toBe(1);
 });
 
-const waitPolling = (polling: Polling, interval: number = 1000) => {
+it("test polling cancel after start", () => {
+  const successHandle = jest.fn();
+  const task = () => Promise.resolve().then(successHandle());
+  const polling = new Polling(task, 1000);
+
+  polling.run();
+  polling.cancel();
+  expect(successHandle).toHaveReturnedTimes(1);
+});
+
+it("test polling cancel using returned function", () => {
+  const successHandle = jest.fn();
+  const task = () => Promise.resolve().then(successHandle());
+  const polling = new Polling(task, 1000);
+
+  const cancel = polling.run();
+  cancel();
+  expect(successHandle).toHaveReturnedTimes(1);
+});
+
+const timeout = (fn: Function, interval: number) => {
   return new Promise((resolve, reject) => {
-    const check = () => (
-      polling.state == State.RUNNING
-        ? setTimeout(check, interval)
-        : resolve(polling)
-    );
-    check();
+    setTimeout(() => {
+      fn();
+      resolve();
+    }, interval);
   });
 };
