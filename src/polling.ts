@@ -2,11 +2,13 @@ import { State, Pending } from './states'
 
 export declare type Executor = (signal?: any) => Promise<any>;
 
-export declare type AbortCallback = () => void;
+export declare type AbortFunction = () => void;
+
+export declare type CancelFunction = () => void;
 
 export interface IAbortController {
   signal: any;
-  abort: AbortCallback;
+  abort: AbortFunction;
 }
 
 export class Polling {
@@ -32,12 +34,12 @@ export class Polling {
     return this._state;
   }
 
-  run = () => {
+  run = (): CancelFunction => {
     this._state = this._state.run(this._run) || this._state;
     return this.cancel;
   }
 
-  cancel = () => {
+  cancel: CancelFunction = () => {
     this._state = this._state.cancel(this._cancel) || this._state;
   };
 
@@ -59,6 +61,6 @@ export function setPolling(
   executor: Executor,
   interval: number,
   abortController?: IAbortController,
-) {
+): CancelFunction {
   return new Polling(executor, interval, abortController).run();
 }
