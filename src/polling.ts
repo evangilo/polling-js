@@ -1,10 +1,10 @@
-import { State, Pending } from "./states";
+import { Pending } from './states';
 
-export declare type Executor = (signal?: any) => Promise<any>;
+export declare type Executor = (signal?: any) => Promise<any>
 
-export declare type AbortFunction = () => void;
+export declare type AbortFunction = () => void
 
-export declare type CancelFunction = () => void;
+export declare type CancelFunction = () => void
 
 export interface IAbortController {
   signal: any;
@@ -12,25 +12,23 @@ export interface IAbortController {
 }
 
 export class Polling {
-  private _executor: Executor;
-  private _interval: number;
-  private _state: State;
-  private _scheduleId: any;
-  private _abortController?: IAbortController;
+  private _executor: Executor
+  private _interval: number
+  private _abortController?: IAbortController
+  private _state = new Pending()
+  private _scheduleId: any = null;
 
-  constructor(
+  constructor (
     executor: Executor,
     interval: number,
-    abortController?: IAbortController,
+    abortController?: IAbortController
   ) {
     this._executor = executor;
     this._interval = interval;
     this._abortController = abortController;
-    this._state = new Pending();
-    this._scheduleId = null;
   }
 
-  get state(): String {
+  get state (): String {
     return this._state.constructor.name.toLowerCase();
   }
 
@@ -44,6 +42,7 @@ export class Polling {
   };
 
   private _cancel = () => {
+    // eslint-disable-next-line no-unused-expressions
     this._abortController?.abort();
     clearTimeout(this._scheduleId);
   };
@@ -59,10 +58,10 @@ export class Polling {
   };
 }
 
-export function setPolling(
+export function setPolling (
   executor: Executor,
   interval: number,
-  abortController?: IAbortController,
+  abortController?: IAbortController
 ): CancelFunction {
   return new Polling(executor, interval, abortController).run();
 }
