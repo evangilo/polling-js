@@ -1,3 +1,5 @@
+/* eslint-disable prefer-promise-reject-errors */
+// eslint-disable-next-line no-unused-vars
 import { Polling, Executor, IAbortController } from './polling';
 
 it('test polling state', () => {
@@ -28,7 +30,7 @@ it('test polling resolve promise', async () => {
 
 it('test polling reject promise', async () => {
   const errorHandle = jest.fn();
-  const task: Executor = () => (Promise.reject().catch((e) => errorHandle()));
+  const task: Executor = () => (Promise.reject().catch(() => errorHandle()));
   const polling = new Polling(task, 1000);
 
   polling.run();

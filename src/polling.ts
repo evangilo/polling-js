@@ -33,12 +33,12 @@ export class Polling {
   }
 
   run = (): CancelFunction => {
-    this._state = this._state.run(this._run) || this._state;
+    this._state = this._state.run(this._run);
     return this.cancel;
   };
 
   cancel: CancelFunction = () => {
-    this._state = this._state.cancel(this._cancel) || this._state;
+    this._state = this._state.cancel(this._cancel);
   };
 
   private _cancel = () => {
@@ -48,9 +48,7 @@ export class Polling {
   };
 
   private _run = () => {
-    this._executor(this._abortController?.signal).finally(() =>
-      this._state.schedule(this._schedule)
-    );
+    this._executor(this._abortController?.signal).finally(this._schedule);
   };
 
   private _schedule = () => {

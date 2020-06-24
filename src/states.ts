@@ -1,6 +1,4 @@
 export abstract class State {
-  schedule (callback: Function): void {}
-
   abstract cancel(polling: Function): State;
   abstract run(callback: Function): State;
 }
