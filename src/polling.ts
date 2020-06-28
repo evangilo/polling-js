@@ -1,14 +1,12 @@
 import { Pending } from './states';
 
-export declare type Executor = (signal?: any) => Promise<any>
+export type Executor = (signal?: any) => Promise<any>
 
-export declare type AbortFunction = () => void
-
-export declare type CancelFunction = () => void
+export type CancelFunction = () => void
 
 export interface IAbortController {
   signal: any;
-  abort: AbortFunction;
+  abort(): void;
 }
 
 export class Polling {
