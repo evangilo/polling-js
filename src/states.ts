@@ -1,5 +1,5 @@
 export abstract class State {
-  abstract cancel(polling: Function): State;
+  abstract cancel(callback: Function): State;
   abstract run(callback: Function): State;
 }
 
@@ -24,10 +24,6 @@ export class Running extends State {
   cancel (callback: Function): State {
     callback();
     return new Canceled();
-  }
-
-  schedule (callback: Function): void {
-    callback();
   }
 }
 
